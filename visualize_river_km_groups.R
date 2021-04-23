@@ -64,7 +64,7 @@ df_optimal_small_sp <-  ggplot(data = df_optimal_small, aes(x=Species, y = Total
   scale_y_continuous(expand = c(0,0), limits = c(0, max(df_optimal$Total+500))) +
   theme_bw(base_size=14) +
   guides(size = FALSE) +
-  theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, colour = c("black", "black", "black", "black", "black", "red", "red", "red")))
+  theme(legend.position = "none", axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, colour = c("black", "black", "black", "black", "black", "red", "red", "red")))
 
 
 df_optimal_large <- df_optimal %>%
@@ -78,7 +78,7 @@ df_optimal_large_sp <-  ggplot(data = df_optimal_large, aes(x=Species, y = Total
   scale_y_continuous(expand = c(0,0), limits = c(0, 5000)) +
   theme_bw(base_size=14) +
   guides(size = FALSE) +
-  theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, colour = c("black", "black", "black", "black", "black", "red", "red", "red")))
+  theme(legend.position = "none", axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, colour = c("black", "black", "black", "black", "black", "red", "red", "red")))
 
 
 #we talked about only looking at 3-4 and 5-6 stream order
@@ -133,7 +133,7 @@ df_sum_order_small <- ggplot(data = df_summary_small, aes(x=Status, y = Meankm, 
   ylab("Mean River Kilometers") + 
   scale_y_continuous(expand = c(0,0), limits = c(0, (max(df$Total)+500))) +
   theme_bw(base_size=14) +
-  theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, color = c("black", "red", "red")))
+  theme(legend.position = "none", axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, color = c("black", "red", "red")))
 
 df_summary_large <- df_summary %>%
   filter(OrderClass == 'Large Rivers' | OrderClass == 'Lower Mainstem')
@@ -148,7 +148,7 @@ df_sum_order_large <- ggplot(data = df_summary_large, aes(x=Status, y = Meankm, 
   ylab("Mean River Kilometers") + 
   scale_y_continuous(expand = c(0,0), limits = c(0, 5000)) +
   theme_bw(base_size=14) +
-  theme(axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, color = c("black", "red", "red")))
+  theme(legend.position = "none", axis.title.x=element_blank(), axis.text.x = element_text(angle = 90, hjust=1, color = c("black", "red", "red")))
 
 #again, if only focusing on the 3-4 and 5-6
 # df_summary_order <- df_summary %>%
@@ -173,8 +173,14 @@ df_sum_order_large <- ggplot(data = df_summary_large, aes(x=Status, y = Meankm, 
 
 #combine the 8 panels of interest. top is by group, bottom by species.
 
+#shared legend
+legend_b <- get_legend(
+  df_sum_order_small + 
+    guides(color = guide_legend(nrow = 1)) +
+    theme(legend.position = "bottom")
+)
 
-plot_final <- plot_grid(df_sum_order_small, df_sum_order_large, df_optimal_small_sp, df_optimal_large_sp, labels = c('A)', '', 'B)', ''), label_size = 16, ncol = 1)
+plot_final <- plot_grid(legend_b, df_sum_order_small, df_sum_order_large, df_optimal_small_sp, df_optimal_large_sp, labels = c('', 'A)', '', 'B)', ''), label_size = 16, ncol = 1, rel_heights = c(.1, 1,1,1,1))
 
 ggsave("plot_final.png", plot = plot_final, 
        width = 30, height = 50, units = "cm", dpi = 600)
